@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi libreta TFT</title>
+<style>
+:root{--bg:#eef2f5;--panel:#fff;--line:#cfd9e1;--tx:#14202b;--mute:#566878;--ac:#0f7f76;--acfg:#fff;--gold:#8a6200;--S:#b4232c;--A:#b86a00;--B:#1f6fb0;--C:#5c6b78;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1822;--panel:#16283a;--line:#27425a;--tx:#ece7d9;--mute:#97a9b8;--ac:#35c2b3;--acfg:#06201d;--gold:#e3b84f;--S:#ff6b6b;--A:#f0a23c;--B:#5aa9e6;--C:#8fa1b0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1822;--panel:#16283a;--line:#27425a;--tx:#ece7d9;--mute:#97a9b8;--ac:#35c2b3;--acfg:#06201d;--gold:#e3b84f;--S:#ff6b6b;--A:#f0a23c;--B:#5aa9e6;--C:#8fa1b0;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:84px}
+header{padding:18px 16px 8px;max-width:640px;margin:0 auto}
+h1{font:800 26px/1.1 system-ui,sans-serif;margin:0 0 12px;letter-spacing:-.5px}
+h1 span{color:var(--gold)}
+.row{display:flex;gap:8px;align-items:center}
+input,textarea,select{width:100%;font:inherit;color:var(--tx);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+textarea{min-height:76px;resize:vertical}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+.chips{display:flex;gap:6px;margin:10px 0 0;overflow-x:auto;padding-bottom:4px}
+.chip{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--tx);border-radius:999px;padding:6px 14px;font:inherit;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--ac);color:var(--acfg);border-color:var(--ac)}
+main{max-width:640px;margin:0 auto;padding:6px 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;display:grid;grid-template-columns:44px 1fr;gap:12px}
+.tier{width:44px;height:52px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);font:800 20px system-ui,sans-serif;color:#fff;background:var(--C)}
+.tier.S{background:var(--S)}.tier.A{background:var(--A)}.tier.B{background:var(--B)}
+.card h2{margin:0;font:700 18px/1.2 system-ui,sans-serif}
+.extra{color:var(--gold);font-size:14px;margin:4px 0 0;font-weight:600}
+.notes{margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--mute)}
+.acts{display:flex;gap:14px;margin-top:10px}
+.lnk{background:none;border:0;color:var(--ac);font:inherit;font-size:14px;padding:4px 0;cursor:pointer}
+.lnk.del{color:var(--S)}
+.empty{text-align:center;color:var(--mute);padding:40px 16px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mute);font:inherit;font-size:13px;padding:10px 2px;border-radius:10px}
+nav button[aria-selected="true"]{color:var(--ac);font-weight:700;background:var(--bg)}
+.fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--ac);color:var(--acfg);border:0;border-radius:999px;padding:14px 20px;font:700 16px system-ui;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:6}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}
+.form{background:var(--bg);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.form h3{margin:0;font:800 20px system-ui,sans-serif}
+.btns{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--tx);font:inherit;font-weight:600}
+.btn.pri{background:var(--ac);color:var(--acfg);border-color:var(--ac)}
+.foot{text-align:center;margin:20px 0}
+body{font-size:14px;padding-bottom:64px}
+h1{display:none}
+header{padding:8px 10px 2px}
+main{padding:2px 10px}
+.card{padding:8px;gap:8px;grid-template-columns:34px 1fr;margin:6px 0}
+.tier{width:34px;height:40px;font-size:16px}
+.card h2{font-size:15px}
+.extra{font-size:12px}
+.chip{padding:4px 11px;font-size:13px}
+.foot{margin:8px}
+.fab{padding:10px 14px;font-size:14px;bottom:62px}
+nav button{padding:8px 2px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Mi libreta <span>TFT</span></h1>
+  <input id="q" type="search" placeholder="Buscar en esta sección" aria-label="Buscar">
+  <div class="chips" id="chips"></div>
+</header>
+<main id="list"></main>
+<div class="foot"><button class="lnk" id="bk">Copia de seguridad</button></div>
+<button class="fab" id="add">+ Añadir</button>
+<nav id="nav" role="tablist"></nav>
+
+<div class="sheet" id="sheet"><div class="form">
+  <h3 id="ft">Nueva entrada</h3>
+  <label for="f_t">Nombre</label><input id="f_t" maxlength="80">
+  <label for="f_r">Nivel</label>
+  <select id="f_r"><option value="">Sin nivel</option><option>S</option><option>A</option><option>B</option><option>C</option></select>
+  <label for="f_x" id="f_xl"></label><input id="f_x" maxlength="120">
+  <label for="f_n">Notas y consejos</label><textarea id="f_n"></textarea>
+  <label for="f_g">Etiquetas (separadas por comas)</label><input id="f_g" placeholder="ej: reroll, 4 costes">
+  <div class="btns"><button class="btn" id="cx">Cancelar</button><button class="btn pri" id="sv">Guardar</button></div>
+</div></div>
+
+<div class="sheet" id="bsheet"><div class="form">
+  <h3>Copia de seguridad</h3>
+  <label for="bt">Copia este texto para guardarlo, o pega uno y pulsa Importar.</label>
+  <textarea id="bt" style="min-height:160px"></textarea>
+  <div class="btns"><button class="btn" id="bc">Cerrar</button><button class="btn pri" id="bi">Importar</button></div>
+</div></div>
+
+<script>
+const TABS=[
+ {k:'comps',n:'Comps',x:'Campeones clave y objetos'},
+ {k:'items',n:'Objetos',x:'Mejor portador o receta'},
+ {k:'arts',n:'Artefactos',x:'Cuándo elegirlo'},
+ {k:'tips',n:'Consejos',x:'Fase de la partida (opcional)'}
+];
+const KEY='tft-libreta-v1';
+let db={comps:[],items:[],arts:[],tips:[]},tab='comps',tier='',edit=null;
+try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);if(d&&typeof d==='object')db=Object.assign(db,d)}}catch(e){}
+const $=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cur=()=>TABS.find(t=>t.k===tab);
+
+function render(){
+  $('nav').innerHTML=TABS.map(t=>`<button role="tab" aria-selected="${t.k===tab}" data-t="${t.k}">${t.n}</button>`).join('');
+  $('chips').innerHTML=['','S','A','B','C'].map(r=>`<button class="chip" aria-pressed="${r===tier}" data-r="${r}">${r||'Todos'}</button>`).join('');
+  const q=$('q').value.trim().toLowerCase();
+  const rows=db[tab].filter(e=>(!tier||e.r===tier)&&(!q||[e.t,e.x,e.n,e.g].join(' ').toLowerCase().includes(q)));
+  $('list').innerHTML=rows.length?rows.map(e=>`<article class="card">
+    <div class="tier ${e.r||''}">${e.r||'·'}</div>
+    <div><h2>${esc(e.t)}</h2>
+    ${e.x?`<p class="extra">${esc(e.x)}</p>`:''}
+    ${e.n?`<p class="notes">${esc(e.n)}</p>`:''}
+    ${e.g?`<div class="tags">${e.g.split(',').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>`:''}
+    <div class="acts"><button class="lnk" data-e="${e.id}">Editar</button><button class="lnk del" data-d="${e.id}">Borrar</button></div></div>
+  </article>`).join(''):`<div class="empty">${db[tab].length?'Nada coincide con tu búsqueda.':'Aún no tienes nada en '+cur().n+'. Pulsa Añadir para guardar tu primera entrada.'}</div>`;
+}
+function open(id){
+  edit=id||null;
+  const e=id?db[tab].find(x=>x.id===id):{};
+  $('ft').textContent=id?'Editar entrada':'Nueva entrada en '+cur().n;
+  $('f_t').value=e.t||'';$('f_r').value=e.r||'';$('f_x').value=e.x||'';$('f_n').value=e.n||'';$('f_g').value=e.g||'';
+  $('f_xl').textContent=cur().x;
+  $('sheet').classList.add('on');$('f_t').focus();
+}
+$('nav').onclick=e=>{const t=e.target.dataset.t;if(t){tab=t;tier='';render()}};
+$('chips').onclick=e=>{if(e.target.dataset.r!==undefined){tier=e.target.dataset.r;render()}};
+$('q').oninput=render;
+$('add').onclick=()=>open();
+$('cx').onclick=()=>$('sheet').classList.remove('on');
+$('sv').onclick=()=>{
+  const t=$('f_t').value.trim();
+  if(!t){$('f_t').focus();return}
+  const o={t,r:$('f_r').value,x:$('f_x').value.trim(),n:$('f_n').value.trim(),g:$('f_g').value.trim()};
+  if(edit){Object.assign(db[tab].find(x=>x.id===edit),o)}else{db[tab].unshift(Object.assign({id:Date.now().toString(36)},o))}
+  save();$('sheet').classList.remove('on');render();
+};
+$('list').onclick=e=>{
+  if(e.target.dataset.e)open(e.target.dataset.e);
+  if(e.target.dataset.d&&confirm('¿Borrar esta entrada?')){db[tab]=db[tab].filter(x=>x.id!==e.target.dataset.d);save();render()}
+};
+$('bk').onclick=()=>{$('bt').value=JSON.stringify(db);$('bsheet').classList.add('on')};
+$('bc').onclick=()=>$('bsheet').classList.remove('on');
+$('bi').onclick=()=>{
+  try{const d=JSON.parse($('bt').value);if(!d||typeof d!=='object')throw 0;
+    db={comps:[],items:[],arts:[],tips:[]};TABS.forEach(t=>{if(Array.isArray(d[t.k]))db[t.k]=d[t.k]});
+    save();render();$('bsheet').classList.remove('on')}
+  catch(e){alert('El texto no es una copia válida.')}
+};
+render();
+</script>
+</body>
+</html>
